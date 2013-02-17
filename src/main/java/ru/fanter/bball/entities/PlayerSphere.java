@@ -14,10 +14,11 @@ import org.jbox2d.dynamics.Fixture;
 import org.jbox2d.dynamics.FixtureDef;
 
 import ru.fanter.bball.BouncyBall;
+import ru.fanter.bball.DeathListener;
 import ru.fanter.bball.GameWorld;
 import ru.fanter.bball.util.B2Util;
 
-public class PlayerSphere implements Entity {
+public class PlayerSphere extends Entity {
 	private final float density = 8.5f;
 	private final float friction = 0.0f;
 	private final float restitution = 1.0f;
@@ -30,8 +31,6 @@ public class PlayerSphere implements Entity {
 	private boolean moveDown;
 	private boolean moveRight;
 	private boolean moveLeft;
-	private boolean rotateRight;
-	private boolean rotateLeft;
 	
 	public PlayerSphere(int radius) {
 		this.radius = radius;
@@ -102,15 +101,6 @@ public class PlayerSphere implements Entity {
 		radius = B2Util.toPixelScale(thisSphere.m_radius);
 	}
 	
-	private void applyTorque(float tq) {
-		body.applyTorque(tq);
-	}
-	
-	private void applyForce(float x, float y) {
-		Vec2 point = body.getPosition();
-		body.applyForce(new Vec2(x, y), point);
-	}
-	
 	private void applyLinearImpulse(float x, float y) {
 		Vec2 point = body.getPosition();
 		body.applyLinearImpulse(new Vec2(x, y), point);
@@ -163,8 +153,6 @@ public class PlayerSphere implements Entity {
 			cs.m_radius -= 0.001;
 			radius = B2Util.toPixelScale(cs.m_radius);
 		}
-		if (rotateRight) applyTorque(0.3f);
-		if (rotateLeft) applyTorque(-0.3f);
 	}
 	
 	@Override
@@ -215,6 +203,11 @@ public class PlayerSphere implements Entity {
 		return body;
 	}
 	
+	@Override
+	public void addDeathListener(DeathListener dl) {
+		this.dl = dl;
+	}
+	
 	public void keyPressed(KeyEvent ev) {
 		switch(ev.getKeyCode()) {
 			case KeyEvent.VK_UP:
@@ -228,12 +221,6 @@ public class PlayerSphere implements Entity {
 				break;
 			case KeyEvent.VK_LEFT:
 				moveLeft = true;
-				break;
-			case 65://a
-				rotateRight = true;
-				break;
-			case 68://d
-				rotateLeft = true;
 				break;
 		}
 	}
@@ -255,12 +242,6 @@ public class PlayerSphere implements Entity {
 		case KeyEvent.VK_LEFT:
 			moveLeft = false;
 			impulseOffset = 0;
-			break;
-		case 65://a
-			rotateRight = false;
-			break;
-		case 68://d
-			rotateLeft = false;
 			break;
 	}
 	}

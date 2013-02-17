@@ -21,8 +21,6 @@ public class CollisionHandler implements ContactListener {
 		Entity entityA = (Entity) contact.getFixtureA().getBody().getUserData();
 		Entity entityB = (Entity) contact.getFixtureB().getBody().getUserData();
 		
-		//if two entities is player_spheres 
-		//or one entity is player sphere and another is life_sphere
 		if (entityA.getType() == EntityType.PLAYER_SPHERE && entityB.getType() == EntityType.PLAYER_SPHERE
 			|| entityA.getType() == EntityType.PLAYER_SPHERE && entityB.getType() == EntityType.LIFE_SPHERE
 			|| entityA.getType() == EntityType.LIFE_SPHERE && entityB.getType() == EntityType.PLAYER_SPHERE) {
@@ -39,16 +37,18 @@ public class CollisionHandler implements ContactListener {
 			
 			if (csA.m_radius > csB.m_radius) {
 				((PlayerSphere)entityA).consume(entityB);
-				consumed.add(entityB);
+				entityB.setDead();
+//				consumed.add(entityB);
 			} else if (csA.m_radius < csB.m_radius) {
-				consumed.add(entityA);
+//				consumed.add(entityA);
 				((PlayerSphere)entityB).consume(entityA);
+				entityA.setDead();
 			} 
 		}
 		
-		for (Entity entity : consumed) {
-			BouncyBall.gameWorld.destroyEntity(entity);
-		}
+//		for (Entity entity : consumed) {
+//			BouncyBall.gameWorld.destroyEntity(entity);
+//		}
 		contactList.clear();
 	}
 	

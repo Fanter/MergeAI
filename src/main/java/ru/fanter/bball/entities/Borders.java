@@ -12,10 +12,11 @@ import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.FixtureDef;
 
 import ru.fanter.bball.BouncyBall;
+import ru.fanter.bball.DeathListener;
 import ru.fanter.bball.GameWorld;
 import ru.fanter.bball.util.B2Util;
 
-public class Borders implements Entity {
+public class Borders extends Entity {
 	private Body body;
 	private EntityType type = EntityType.BORDER;
 	private ArrayList<EdgePoints> pointList = new ArrayList<EdgePoints>();
@@ -77,6 +78,11 @@ public class Borders implements Entity {
 	@Override
 	public Body getBody() {
 		return body;
+	}
+	
+	@Override
+	public void addDeathListener(DeathListener dl) {
+		this.dl = dl;
 	}
 	
 	public class EdgePoints {

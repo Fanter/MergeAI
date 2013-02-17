@@ -11,10 +11,11 @@ import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.FixtureDef;
 
 import ru.fanter.bball.BouncyBall;
+import ru.fanter.bball.DeathListener;
 import ru.fanter.bball.GameWorld;
 import ru.fanter.bball.util.B2Util;
 
-public class LifeSphere implements Entity {
+public class LifeSphere extends Entity {
 	public boolean isDead = false;
 	private EntityType type = EntityType.LIFE_SPHERE;
 	private Body body;
@@ -46,6 +47,11 @@ public class LifeSphere implements Entity {
 	@Override
 	public Body getBody() {
 		return body;
+	}
+	
+	@Override 
+	public void addDeathListener(DeathListener dl) {
+		this.dl = dl;
 	}
 	
 	@Override
