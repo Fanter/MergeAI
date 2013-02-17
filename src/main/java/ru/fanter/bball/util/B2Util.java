@@ -1,4 +1,4 @@
-package ru.fanter.bball.entities;
+package ru.fanter.bball.util;
 
 import ru.fanter.bball.BouncyBall;
 

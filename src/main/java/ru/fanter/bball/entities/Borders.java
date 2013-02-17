@@ -12,6 +12,8 @@ import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.FixtureDef;
 
 import ru.fanter.bball.BouncyBall;
+import ru.fanter.bball.GameWorld;
+import ru.fanter.bball.util.B2Util;
 
 public class Borders implements Entity {
 	private Body body;

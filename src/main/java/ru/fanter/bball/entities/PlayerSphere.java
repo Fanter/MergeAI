@@ -14,6 +14,8 @@ import org.jbox2d.dynamics.Fixture;
 import org.jbox2d.dynamics.FixtureDef;
 
 import ru.fanter.bball.BouncyBall;
+import ru.fanter.bball.GameWorld;
+import ru.fanter.bball.util.B2Util;
 
 public class PlayerSphere implements Entity {
 	private final float density = 8.5f;

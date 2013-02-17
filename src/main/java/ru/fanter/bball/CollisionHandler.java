@@ -1,4 +1,4 @@
-package ru.fanter.bball.entities;
+package ru.fanter.bball;
 
 import java.util.ArrayList;
 
@@ -8,7 +8,9 @@ import org.jbox2d.collision.Manifold;
 import org.jbox2d.collision.shapes.CircleShape;
 import org.jbox2d.dynamics.contacts.Contact;
 
-import ru.fanter.bball.BouncyBall;
+import ru.fanter.bball.entities.Entity;
+import ru.fanter.bball.entities.EntityType;
+import ru.fanter.bball.entities.PlayerSphere;
 
 public class CollisionHandler implements ContactListener {
 	ArrayList<Contact> contactList = new ArrayList<Contact>();

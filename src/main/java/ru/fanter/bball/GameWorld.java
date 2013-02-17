@@ -1,4 +1,4 @@
-package ru.fanter.bball.entities;
+package ru.fanter.bball;
 
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
@@ -9,6 +9,12 @@ import java.util.Random;
 import org.jbox2d.common.Settings;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.World;
+
+import ru.fanter.bball.entities.Borders;
+import ru.fanter.bball.entities.Entity;
+import ru.fanter.bball.entities.EntityType;
+import ru.fanter.bball.entities.LifeSphere;
+import ru.fanter.bball.entities.PlayerSphere;
 
 public class GameWorld {
 	public static World world;

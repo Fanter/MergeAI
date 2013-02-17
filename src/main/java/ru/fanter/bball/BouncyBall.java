@@ -13,8 +13,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import ru.fanter.bball.entities.Borders;
-import ru.fanter.bball.entities.CollisionHandler;
-import ru.fanter.bball.entities.GameWorld;
 import ru.fanter.bball.entities.PlayerSphere;
 
 public class BouncyBall extends JFrame implements KeyListener {

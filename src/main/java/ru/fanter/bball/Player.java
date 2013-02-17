@@ -1,8 +1,11 @@
-package ru.fanter.bball.entities;
+package ru.fanter.bball;
 
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Random;
+
+import ru.fanter.bball.entities.Entity;
+import ru.fanter.bball.entities.PlayerSphere;
 
 public class Player {
 	private ArrayList<PlayerSphere> sphereList = new ArrayList<PlayerSphere>();
