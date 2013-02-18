@@ -12,13 +12,13 @@ import org.jbox2d.common.Settings;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.World;
 
+import ru.fanter.merge.entities.Borders;
+import ru.fanter.merge.entities.Entity;
+import ru.fanter.merge.entities.EntityType;
+import ru.fanter.merge.entities.LifeSphere;
+import ru.fanter.merge.entities.PlayerSphere;
 import ru.fanter.merge.event.EntityEvent;
 import ru.fanter.merge.event.EntityListener;
-import ru.fanter.mergel.entities.Borders;
-import ru.fanter.mergel.entities.Entity;
-import ru.fanter.mergel.entities.EntityType;
-import ru.fanter.mergel.entities.LifeSphere;
-import ru.fanter.mergel.entities.PlayerSphere;
 
 public class GameWorld implements EntityListener {
 	public static World world;
@@ -41,7 +41,7 @@ public class GameWorld implements EntityListener {
 			int radius = (random.nextInt(5) + 2)*5 ;
 			PlayerSphere sphere = new PlayerSphere(radius);
 			sphere.createSphere(70*i, 200);
-			sphere.addDeathListener(this);
+			sphere.addEntityListener(this);
 			entityList.add(sphere);
 		}
 	}
@@ -77,7 +77,7 @@ public class GameWorld implements EntityListener {
 			int x = rnd.nextInt(750) + 20;
 			int y = rnd.nextInt(550) + 20;
 			LifeSphere lifeSphere = new LifeSphere(x, y);
-			lifeSphere.addDeathListener(this);
+			lifeSphere.addEntityListener(this);
 			entityList.add(lifeSphere);
 		}
 	}

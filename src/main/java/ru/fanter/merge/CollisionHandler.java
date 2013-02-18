@@ -8,9 +8,9 @@ import org.jbox2d.collision.Manifold;
 import org.jbox2d.collision.shapes.CircleShape;
 import org.jbox2d.dynamics.contacts.Contact;
 
-import ru.fanter.mergel.entities.Entity;
-import ru.fanter.mergel.entities.EntityType;
-import ru.fanter.mergel.entities.PlayerSphere;
+import ru.fanter.merge.entities.Entity;
+import ru.fanter.merge.entities.EntityType;
+import ru.fanter.merge.entities.PlayerSphere;
 
 public class CollisionHandler implements ContactListener {
 	ArrayList<Contact> contactList = new ArrayList<Contact>();

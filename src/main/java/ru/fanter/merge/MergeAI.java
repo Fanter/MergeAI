@@ -12,8 +12,8 @@ import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import ru.fanter.mergel.entities.Borders;
-import ru.fanter.mergel.entities.PlayerSphere;
+import ru.fanter.merge.entities.Borders;
+import ru.fanter.merge.entities.PlayerSphere;
 
 public class MergeAI extends JFrame implements KeyListener {
 	// number of updates per seconds 

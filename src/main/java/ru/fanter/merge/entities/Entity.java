@@ -1,4 +1,4 @@
-package ru.fanter.mergel.entities;
+package ru.fanter.merge.entities;
 
 import java.awt.Graphics;
 
@@ -12,10 +12,10 @@ public abstract class Entity {
 	public EntityListener entityListener;
 	
 	public abstract EntityType getType();
-	public void update() {}
-	public void draw(Graphics g) {}
+	public abstract void update();
+	public abstract void draw(Graphics g);
 	public abstract Body getBody();
-	public abstract void addDeathListener(EntityListener dl);
+	public abstract void addEntityListener(EntityListener dl);
 	
 	public void remove() {
 		EntityEvent ee = new EntityEvent(this, EventType.DELETE);

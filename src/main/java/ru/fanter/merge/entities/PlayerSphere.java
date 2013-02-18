@@ -1,4 +1,4 @@
-package ru.fanter.mergel.entities;
+package ru.fanter.merge.entities;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -208,7 +208,7 @@ public class PlayerSphere extends Entity {
 	}
 	
 	@Override
-	public void addDeathListener(EntityListener dl) {
+	public void addEntityListener(EntityListener dl) {
 		this.entityListener = dl;
 	}
 	

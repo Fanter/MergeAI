@@ -1,6 +1,6 @@
 package ru.fanter.merge.event;
 
-import ru.fanter.mergel.entities.Entity;
+import ru.fanter.merge.entities.Entity;
 
 public class EntityEvent {
 	private Entity entity;
