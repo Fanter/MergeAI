@@ -1,4 +1,4 @@
-package ru.fanter.bball;
+package ru.fanter.merge;
 
 import javax.swing.*;
 
@@ -7,7 +7,7 @@ public class LaunchBB {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				new BouncyBall().start();
+				new MergeAI().start();
 			}
 		});
 	}

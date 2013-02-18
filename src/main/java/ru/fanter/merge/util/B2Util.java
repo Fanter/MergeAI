@@ -1,6 +1,6 @@
-package ru.fanter.bball.util;
+package ru.fanter.merge.util;
 
-import ru.fanter.bball.BouncyBall;
+import ru.fanter.merge.MergeAI;
 
 public class B2Util {
 	//1 meter = 100 pixels;
@@ -11,7 +11,7 @@ public class B2Util {
 	}
 	
 	public static int toPixelY(float y) {
-		return BouncyBall.WINDOW_HEIGHT - (int) (y * SCALE);
+		return MergeAI.WINDOW_HEIGHT - (int) (y * SCALE);
 	}
 	
 	public static float toMeterX(int x) {
@@ -19,7 +19,7 @@ public class B2Util {
 	}
 	
 	public static float toMeterY(int y) {
-		return (float) (BouncyBall.WINDOW_HEIGHT - y) / (float) SCALE;
+		return (float) (MergeAI.WINDOW_HEIGHT - y) / (float) SCALE;
 	}
 	
 	public static int toPixelScale(float size) {

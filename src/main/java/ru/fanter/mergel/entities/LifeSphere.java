@@ -1,4 +1,4 @@
-package ru.fanter.bball.entities;
+package ru.fanter.mergel.entities;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -10,13 +10,13 @@ import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.FixtureDef;
 
-import ru.fanter.bball.BouncyBall;
-import ru.fanter.bball.DeathListener;
-import ru.fanter.bball.GameWorld;
-import ru.fanter.bball.util.B2Util;
+import ru.fanter.merge.GameWorld;
+import ru.fanter.merge.event.EntityEvent;
+import ru.fanter.merge.event.EntityListener;
+import ru.fanter.merge.event.EntityEvent.EventType;
+import ru.fanter.merge.util.B2Util;
 
 public class LifeSphere extends Entity {
-	public boolean isDead = false;
 	private EntityType type = EntityType.LIFE_SPHERE;
 	private Body body;
 	private final int radius = 7;
@@ -50,20 +50,16 @@ public class LifeSphere extends Entity {
 	}
 	
 	@Override 
-	public void addDeathListener(DeathListener dl) {
-		this.dl = dl;
+	public void addDeathListener(EntityListener dl) {
+		this.entityListener = dl;
 	}
 	
 	@Override
 	public void draw(Graphics g) {
-		Vec2 velocity = body.getLinearVelocity();
 		Vec2 position = body.getPosition();
-		int velX = B2Util.toPixelScale(velocity.x);
-		int velY = B2Util.toPixelScale(velocity.y);
 		int posX = B2Util.toPixelX(position.x);
 		int posY = B2Util.toPixelY(position.y);
 		
-		//draw Circle
 		g.setColor(Color.BLACK);
 		g.fillOval(posX - radius, posY - radius, radius*2, radius*2);
 	}
@@ -72,7 +68,7 @@ public class LifeSphere extends Entity {
 	public void update() {
 		stepsToLive -= 1;
 		if (stepsToLive == 0) {
-			isDead = true;
+			remove();
 		}
 	}
 }

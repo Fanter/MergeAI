@@ -1,4 +1,4 @@
-package ru.fanter.bball.entities;
+package ru.fanter.mergel.entities;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -11,10 +11,10 @@ import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.FixtureDef;
 
-import ru.fanter.bball.BouncyBall;
-import ru.fanter.bball.DeathListener;
-import ru.fanter.bball.GameWorld;
-import ru.fanter.bball.util.B2Util;
+import ru.fanter.merge.GameWorld;
+import ru.fanter.merge.MergeAI;
+import ru.fanter.merge.event.EntityListener;
+import ru.fanter.merge.util.B2Util;
 
 public class Borders extends Entity {
 	private Body body;
@@ -22,8 +22,8 @@ public class Borders extends Entity {
 	private ArrayList<EdgePoints> pointList = new ArrayList<EdgePoints>();
 	
 	public Borders() {
-		int width = BouncyBall.WINDOW_WIDTH;
-		int height = BouncyBall.WINDOW_HEIGHT;
+		int width = MergeAI.WINDOW_WIDTH;
+		int height = MergeAI.WINDOW_HEIGHT;
 		
 		pointList.add(new EdgePoints(0, 0, 0, height));//left wall
 		pointList.add(new EdgePoints(0, height, width, height));//bottom
@@ -81,8 +81,8 @@ public class Borders extends Entity {
 	}
 	
 	@Override
-	public void addDeathListener(DeathListener dl) {
-		this.dl = dl;
+	public void addDeathListener(EntityListener dl) {
+		this.entityListener = dl;
 	}
 	
 	public class EdgePoints {

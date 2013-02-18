@@ -1,4 +1,4 @@
-package ru.fanter.bball;
+package ru.fanter.merge;
 
 import java.util.ArrayList;
 
@@ -8,9 +8,9 @@ import org.jbox2d.collision.Manifold;
 import org.jbox2d.collision.shapes.CircleShape;
 import org.jbox2d.dynamics.contacts.Contact;
 
-import ru.fanter.bball.entities.Entity;
-import ru.fanter.bball.entities.EntityType;
-import ru.fanter.bball.entities.PlayerSphere;
+import ru.fanter.mergel.entities.Entity;
+import ru.fanter.mergel.entities.EntityType;
+import ru.fanter.mergel.entities.PlayerSphere;
 
 public class CollisionHandler implements ContactListener {
 	ArrayList<Contact> contactList = new ArrayList<Contact>();
@@ -35,20 +35,16 @@ public class CollisionHandler implements ContactListener {
 			CircleShape csA = (CircleShape) contact.getFixtureA().getShape();
 			CircleShape csB = (CircleShape) contact.getFixtureB().getShape();
 			
+			//it works because radius of life sphere is always smaller
+			//than player radius. Can broke easily.
 			if (csA.m_radius > csB.m_radius) {
 				((PlayerSphere)entityA).consume(entityB);
-				entityB.setDead();
-//				consumed.add(entityB);
+				entityB.remove();
 			} else if (csA.m_radius < csB.m_radius) {
-//				consumed.add(entityA);
 				((PlayerSphere)entityB).consume(entityA);
-				entityA.setDead();
+				entityA.remove();
 			} 
 		}
-		
-//		for (Entity entity : consumed) {
-//			BouncyBall.gameWorld.destroyEntity(entity);
-//		}
 		contactList.clear();
 	}
 	

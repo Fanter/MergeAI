@@ -1,4 +1,4 @@
-package ru.fanter.bball;
+package ru.fanter.merge;
 
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
@@ -12,18 +12,19 @@ import org.jbox2d.common.Settings;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.World;
 
-import ru.fanter.bball.entities.Borders;
-import ru.fanter.bball.entities.Entity;
-import ru.fanter.bball.entities.EntityType;
-import ru.fanter.bball.entities.LifeSphere;
-import ru.fanter.bball.entities.PlayerSphere;
+import ru.fanter.merge.event.EntityEvent;
+import ru.fanter.merge.event.EntityListener;
+import ru.fanter.mergel.entities.Borders;
+import ru.fanter.mergel.entities.Entity;
+import ru.fanter.mergel.entities.EntityType;
+import ru.fanter.mergel.entities.LifeSphere;
+import ru.fanter.mergel.entities.PlayerSphere;
 
-public class GameWorld implements DeathListener {
+public class GameWorld implements EntityListener {
 	public static World world;
 	private float timeStep = 1.0f/35.0f;
 	private int velocityIterations = 8;
 	private int positionIterations = 4;
-	private ArrayList<Player> playerList = new ArrayList<Player>();
 	private ArrayList<Entity> entityList = new ArrayList<Entity>();
 	private Set<Entity> entitiesToRemove = new HashSet<Entity>();
 	
@@ -34,32 +35,29 @@ public class GameWorld implements DeathListener {
 	
 	public void createWorld() {
 		entityList.add(new Borders());
-		playerList.add(new Player(this));
+		
+		for (int i = 1; i < 10; i++) {
+			Random random = new Random();
+			int radius = (random.nextInt(5) + 2)*5 ;
+			PlayerSphere sphere = new PlayerSphere(radius);
+			sphere.createSphere(70*i, 200);
+			sphere.addDeathListener(this);
+			entityList.add(sphere);
+		}
 	}
 	
-	public void step() {
-		removeDeadEntities();
-		
+	public void step() {		
 		Iterator<Entity> it2 = entityList.iterator();
 		while (it2.hasNext()) {
 			Entity entity = it2.next();
 			entity.update();
-			if (entity.getType() == EntityType.LIFE_SPHERE) {
-				if (((LifeSphere)entity).isDead) {
-					world.destroyBody(entity.getBody());
-					it2.remove();
-				}
-			}
 		}
 		
-		for (Player player : playerList) {
-			player.update();
-		}
 		generateLifeSphere();
 		world.step(timeStep, velocityIterations, positionIterations);
 	}
 	
-	private void removeDeadEntities() {
+	public void removeDeadEntities() {
 		Iterator<Entity> it = entityList.iterator();
 		while (it.hasNext()) {
 			Entity entity = it.next();
@@ -68,11 +66,7 @@ public class GameWorld implements DeathListener {
 				it.remove();
 				entitiesToRemove.remove(entity);
 			}
-		}
-		
-		for (Player player : playerList) {
-			player.removeEntities(entitiesToRemove);
-		}
+		}//while
 	}
 	
 	private void generateLifeSphere() {
@@ -88,14 +82,6 @@ public class GameWorld implements DeathListener {
 		}
 	}
 	
-	public void destroyEntity(Entity entity) {
-		world.destroyBody(entity.getBody());
-		entityList.remove(entity);
-		for (Player player : playerList) {
-			player.destroy(entity);
-		}
-	}
-	
 	public void addEntity(Entity entity) {
 		entityList.add(entity);
 	}
@@ -104,10 +90,6 @@ public class GameWorld implements DeathListener {
 	    for (Entity entity : entityList) {
 	    	entity.draw(g);
 	    }
-	    
-	    for (Player player : playerList) {
-	    	player.draw(g);
-	    }
 	}
 	
 	public void addCollisionListener(CollisionHandler handler) {
@@ -115,19 +97,30 @@ public class GameWorld implements DeathListener {
 	}
 	
 	@Override 
-	public void addEntityToRemove(Entity entity) {
-		entitiesToRemove.add(entity);
+	public void update(EntityEvent event) {
+		switch(event.getEventType()) {
+		case DELETE:
+			entitiesToRemove.add(event.getEntity());
+			break;
+			//TODO implement
+		case SPLIT:
+			break;
+		}
 	}
 	
 	public void keyPressed (KeyEvent ev) {
-		for (Player player : playerList) {
-			player.keyPressed(ev);
+		for (Entity entity : entityList) {
+			if (entity.getType() == EntityType.PLAYER_SPHERE) {
+				((PlayerSphere)entity).keyPressed(ev);	
+			}
 		}
 	}
 	
 	public void keyReleased(KeyEvent ev) {
-		for (Player player : playerList) {
-			player.keyReleased(ev);
+		for (Entity entity : entityList) {
+			if (entity.getType() == EntityType.PLAYER_SPHERE) {
+				((PlayerSphere)entity).keyReleased(ev);	
+			}
 		}
 	}
 }

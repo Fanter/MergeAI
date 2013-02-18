@@ -1,4 +1,4 @@
-package ru.fanter.bball.entities;
+package ru.fanter.mergel.entities;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -13,10 +13,12 @@ import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.Fixture;
 import org.jbox2d.dynamics.FixtureDef;
 
-import ru.fanter.bball.BouncyBall;
-import ru.fanter.bball.DeathListener;
-import ru.fanter.bball.GameWorld;
-import ru.fanter.bball.util.B2Util;
+import ru.fanter.merge.GameWorld;
+import ru.fanter.merge.MergeAI;
+import ru.fanter.merge.event.EntityEvent;
+import ru.fanter.merge.event.EntityListener;
+import ru.fanter.merge.event.EntityEvent.EventType;
+import ru.fanter.merge.util.B2Util;
 
 public class PlayerSphere extends Entity {
 	private final float density = 8.5f;
@@ -74,13 +76,14 @@ public class PlayerSphere extends Entity {
 			return;
 		}
 		
-		BouncyBall.gameWorld.destroyEntity(this);
+		remove();
+		
 		for (int i = 0; i < 2; i++) {
 			int halfRadius = B2Util.toPixelScale(radius/2.0f);
 			PlayerSphere sphere = new PlayerSphere(halfRadius);
 			sphere.createSphere(x, y);
 			sphere.setVelocity(velocity);
-			BouncyBall.gameWorld.addEntity(sphere);
+			MergeAI.gameWorld.addEntity(sphere);
 		}
 		
 	}
@@ -133,6 +136,7 @@ public class PlayerSphere extends Entity {
 			return;
 		}
 		
+		//for control via keyboard
 		if (moveUp) {
 			applyLinearImpulse(0, 0.1f);
 			cs.m_radius -= 0.001;
@@ -204,8 +208,8 @@ public class PlayerSphere extends Entity {
 	}
 	
 	@Override
-	public void addDeathListener(DeathListener dl) {
-		this.dl = dl;
+	public void addDeathListener(EntityListener dl) {
+		this.entityListener = dl;
 	}
 	
 	public void keyPressed(KeyEvent ev) {

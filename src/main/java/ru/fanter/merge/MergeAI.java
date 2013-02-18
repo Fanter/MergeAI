@@ -1,4 +1,4 @@
-package ru.fanter.bball;
+package ru.fanter.merge;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -12,10 +12,10 @@ import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import ru.fanter.bball.entities.Borders;
-import ru.fanter.bball.entities.PlayerSphere;
+import ru.fanter.mergel.entities.Borders;
+import ru.fanter.mergel.entities.PlayerSphere;
 
-public class BouncyBall extends JFrame implements KeyListener {
+public class MergeAI extends JFrame implements KeyListener {
 	// number of updates per seconds 
     public static final int UPDATE_RATE = 35; 
     // time for one update in milliseconds
@@ -75,8 +75,10 @@ public class BouncyBall extends JFrame implements KeyListener {
 
         while (true) {
             startTime = System.currentTimeMillis();
+            //TODO move collision handler into gameWorld
             gameWorld.step();
             collisionHandler.handleCollisions();
+            gameWorld.removeDeadEntities();
             repaint();
             elapsedTime = System.currentTimeMillis() - startTime;
             timeToSleep = UPDATE_PERIOD - elapsedTime;
