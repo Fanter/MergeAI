@@ -5,19 +5,19 @@ import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 
 import org.jbox2d.collision.shapes.CircleShape;
-import org.jbox2d.collision.shapes.Shape;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.BodyType;
-import org.jbox2d.dynamics.Fixture;
 import org.jbox2d.dynamics.FixtureDef;
 
 import ru.fanter.merge.GameWorld;
 import ru.fanter.merge.MergeAI;
-import ru.fanter.merge.event.EntityEvent;
+import ru.fanter.merge.PlayerStrategy;
 import ru.fanter.merge.event.EntityListener;
-import ru.fanter.merge.event.EntityEvent.EventType;
+import ru.fanter.merge.model.Move;
+import ru.fanter.merge.model.SphereModel;
+import ru.fanter.merge.model.WorldData;
 import ru.fanter.merge.util.B2Util;
 
 public class PlayerSphere extends Entity {
@@ -27,15 +27,17 @@ public class PlayerSphere extends Entity {
 	private final int minRadius = 9;
 	private int impulseOffset = 0;
 	private Body body;
-	private int radius;
+	private int radius = 15;
 	private EntityType type = EntityType.PLAYER_SPHERE;
+	private PlayerStrategy playerStrategy;
+	private Move move;
 	private boolean moveUp;
 	private boolean moveDown;
 	private boolean moveRight;
 	private boolean moveLeft;
 	
-	public PlayerSphere(int radius) {
-		this.radius = radius;
+	public PlayerSphere(PlayerStrategy playerStrategy) {
+		this.playerStrategy = playerStrategy;
 	}
 	
 	public void createSphere (int x, int y) {
@@ -64,28 +66,79 @@ public class PlayerSphere extends Entity {
 		}
 	}
 	
-	public void split() {
-		Vec2 point = body.getPosition();
-		int x = B2Util.toPixelX(point.x);
-		int y = B2Util.toPixelY(point.y);
+	public PlayerStrategy getStrategy() {
+		return playerStrategy;
+	}
+	
+	public void move(SphereModel sm, WorldData wd, Move move) {
+		this.move = move;
+		playerStrategy.move(sm, wd, move);
+	}
+	
+	@Override
+	public void update() {
 		CircleShape cs = (CircleShape) body.getFixtureList().getShape();
-		float radius = cs.m_radius;
-		Vec2 velocity = body.getLinearVelocity();
+		float impulse = move.getParticles() * 0.1f;
+		float impulseX = (float) Math.cos(move.getFireAngle()) * impulse;
+		float impulseY = (float) Math.sin(move.getFireAngle()) * impulse;
 		
-		if (this.radius <= minRadius * 2) {
+		if (B2Util.toPixelScale(cs.m_radius) <= minRadius) {
 			return;
 		}
 		
-		remove();
+		System.out.println(move.getParticles());
 		
-		for (int i = 0; i < 2; i++) {
-			int halfRadius = B2Util.toPixelScale(radius/2.0f);
-			PlayerSphere sphere = new PlayerSphere(halfRadius);
-			sphere.createSphere(x, y);
-			sphere.setVelocity(velocity);
-			MergeAI.gameWorld.addEntity(sphere);
+		applyLinearImpulse(impulseX, impulseY);
+		cs.m_radius -= 0.001 * move.getParticles();
+		radius = B2Util.toPixelScale(cs.m_radius);
+		
+		if (moveUp) {
+			applyLinearImpulse(0, 0.1f);
+			cs.m_radius -= 0.001;
+			radius = B2Util.toPixelScale(cs.m_radius);
 		}
-		
+		if (moveDown) {
+			applyLinearImpulse(0, -0.1f);
+			cs.m_radius -= 0.001;
+			radius = B2Util.toPixelScale(cs.m_radius);
+		}
+		if (moveRight) {
+			applyLinearImpulse(0.1f, 0);
+			cs.m_radius -= 0.001;
+			radius = B2Util.toPixelScale(cs.m_radius);
+		}
+		if (moveLeft) { 
+			applyLinearImpulse(-0.1f, 0);
+			cs.m_radius -= 0.001;
+			radius = B2Util.toPixelScale(cs.m_radius);
+		}
+	}
+//	public void split() {
+//		Vec2 point = body.getPosition();
+//		int x = B2Util.toPixelX(point.x);
+//		int y = B2Util.toPixelY(point.y);
+//		CircleShape cs = (CircleShape) body.getFixtureList().getShape();
+//		float radius = cs.m_radius;
+//		Vec2 velocity = body.getLinearVelocity();
+//		
+//		if (this.radius <= minRadius * 2) {
+//			return;
+//		}
+//		
+//		remove();
+//		
+//		for (int i = 0; i < 2; i++) {
+//			int halfRadius = B2Util.toPixelScale(radius/2.0f);
+//			PlayerSphere sphere = new PlayerSphere(playerStrategy);
+//			sphere.setRadius(halfRadius);
+//			sphere.createSphere(x, y);
+//			sphere.setVelocity(velocity);
+//			MergeAI.gameWorld.addEntity(sphere);
+//		}
+//	}
+	
+	private void setRadius(int radius) {
+		this.radius = radius;
 	}
 	
 	private void setVelocity(Vec2 velocity) {
@@ -126,37 +179,6 @@ public class PlayerSphere extends Entity {
 	public float getMeterRadius() {
 		CircleShape cs = (CircleShape) body.getFixtureList().getShape();
 		return cs.m_radius;
-	}
-	
-	@Override
-	public void update() {
-		CircleShape cs = (CircleShape) body.getFixtureList().getShape();
-		
-		if (B2Util.toPixelScale(cs.m_radius) <= minRadius) {
-			return;
-		}
-		
-		//for control via keyboard
-		if (moveUp) {
-			applyLinearImpulse(0, 0.1f);
-			cs.m_radius -= 0.001;
-			radius = B2Util.toPixelScale(cs.m_radius);
-		}
-		if (moveDown) {
-			applyLinearImpulse(0, -0.1f);
-			cs.m_radius -= 0.001;
-			radius = B2Util.toPixelScale(cs.m_radius);
-		}
-		if (moveRight) {
-			applyLinearImpulse(0.1f, 0);
-			cs.m_radius -= 0.001;
-			radius = B2Util.toPixelScale(cs.m_radius);
-		}
-		if (moveLeft) { 
-			applyLinearImpulse(-0.1f, 0);
-			cs.m_radius -= 0.001;
-			radius = B2Util.toPixelScale(cs.m_radius);
-		}
 	}
 	
 	@Override

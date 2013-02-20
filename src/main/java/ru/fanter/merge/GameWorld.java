@@ -5,6 +5,7 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
@@ -19,6 +20,10 @@ import ru.fanter.merge.entities.LifeSphere;
 import ru.fanter.merge.entities.PlayerSphere;
 import ru.fanter.merge.event.EntityEvent;
 import ru.fanter.merge.event.EntityListener;
+import ru.fanter.merge.model.LifeModel;
+import ru.fanter.merge.model.Move;
+import ru.fanter.merge.model.SphereModel;
+import ru.fanter.merge.model.WorldData;
 
 public class GameWorld implements EntityListener {
 	public static World world;
@@ -39,22 +44,45 @@ public class GameWorld implements EntityListener {
 		for (int i = 1; i < 10; i++) {
 			Random random = new Random();
 			int radius = (random.nextInt(5) + 2)*5 ;
-			PlayerSphere sphere = new PlayerSphere(radius);
+			PlayerSphere sphere = new PlayerSphere(new PlayerStrategy());
 			sphere.createSphere(70*i, 200);
 			sphere.addEntityListener(this);
 			entityList.add(sphere);
 		}
 	}
 	
-	public void step() {		
-		Iterator<Entity> it2 = entityList.iterator();
-		while (it2.hasNext()) {
-			Entity entity = it2.next();
-			entity.update();
+	public void step() {			
+		WorldData worldData = createWorldData();
+		for (Entity entity : entityList) {
+			if (entity.getType() == EntityType.PLAYER_SPHERE) {
+				PlayerSphere playerSphere = (PlayerSphere) entity;
+				SphereModel sphereModel = new SphereModel(playerSphere);
+				Move move = new Move();
+				playerSphere.move(sphereModel, worldData, move);
+				playerSphere.update();
+			} else {
+				entity.update();
+			}
 		}
 		
 		generateLifeSphere();
 		world.step(timeStep, velocityIterations, positionIterations);
+	}
+	
+	private WorldData createWorldData() {
+		List<SphereModel> sphereModels = new ArrayList<SphereModel>();
+		List<LifeModel> lifeModels = new ArrayList<LifeModel>();
+		
+		for (Entity entity : entityList) {
+			if (entity.getType() == EntityType.PLAYER_SPHERE) {
+				PlayerSphere ps = (PlayerSphere) entity;
+				sphereModels.add(new SphereModel(ps));
+			} else if (entity.getType() == EntityType.LIFE_SPHERE) {
+				LifeSphere ls = (LifeSphere) entity;
+				lifeModels.add(new LifeModel(ls));
+			}
+		}
+		return new WorldData(sphereModels, lifeModels);
 	}
 	
 	public void removeDeadEntities() {
@@ -99,10 +127,11 @@ public class GameWorld implements EntityListener {
 	@Override 
 	public void update(EntityEvent event) {
 		switch(event.getEventType()) {
+		//TODO move inside PlayerSphere?
 		case DELETE:
 			entitiesToRemove.add(event.getEntity());
 			break;
-			//TODO implement
+		//TODO implement
 		case SPLIT:
 			break;
 		}

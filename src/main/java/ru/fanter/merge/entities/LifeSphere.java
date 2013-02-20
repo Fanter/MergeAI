@@ -20,7 +20,7 @@ public class LifeSphere extends Entity {
 	private EntityType type = EntityType.LIFE_SPHERE;
 	private Body body;
 	private final int radius = 7;
-	private int stepsToLive = 600;
+	private int ticksToLive = 600;
 	
 	public LifeSphere(int x, int y) {
 		BodyDef bodyDef = new BodyDef();
@@ -37,6 +37,10 @@ public class LifeSphere extends Entity {
 		body = GameWorld.world.createBody(bodyDef);
 		body.createFixture(fixtDef);
 		body.setUserData(this);
+	}
+	
+	public int getTicksLeft() {
+		return ticksToLive;
 	}
 
 	@Override
@@ -66,8 +70,8 @@ public class LifeSphere extends Entity {
 	
 	@Override
 	public void update() {
-		stepsToLive -= 1;
-		if (stepsToLive == 0) {
+		ticksToLive -= 1;
+		if (ticksToLive == 0) {
 			remove();
 		}
 	}
