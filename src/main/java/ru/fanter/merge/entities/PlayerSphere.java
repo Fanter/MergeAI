@@ -12,12 +12,11 @@ import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.FixtureDef;
 
 import ru.fanter.merge.GameWorld;
-import ru.fanter.merge.MergeAI;
-import ru.fanter.merge.PlayerStrategy;
 import ru.fanter.merge.event.EntityListener;
 import ru.fanter.merge.model.Move;
 import ru.fanter.merge.model.SphereModel;
 import ru.fanter.merge.model.WorldData;
+import ru.fanter.merge.strategy.Strategy;
 import ru.fanter.merge.util.B2Util;
 
 public class PlayerSphere extends Entity {
@@ -29,15 +28,17 @@ public class PlayerSphere extends Entity {
 	private Body body;
 	private int radius = 15;
 	private EntityType type = EntityType.PLAYER_SPHERE;
-	private PlayerStrategy playerStrategy;
+	private Strategy strategy;
 	private Move move;
+	private Color color;
 	private boolean moveUp;
 	private boolean moveDown;
 	private boolean moveRight;
 	private boolean moveLeft;
 	
-	public PlayerSphere(PlayerStrategy playerStrategy) {
-		this.playerStrategy = playerStrategy;
+	public PlayerSphere(Strategy strategy, Color color) {
+		this.strategy = strategy;
+		this.color = color;
 	}
 	
 	public void createSphere (int x, int y) {
@@ -66,13 +67,13 @@ public class PlayerSphere extends Entity {
 		}
 	}
 	
-	public PlayerStrategy getStrategy() {
-		return playerStrategy;
+	public Strategy getStrategy() {
+		return strategy;
 	}
 	
 	public void move(SphereModel sm, WorldData wd, Move move) {
 		this.move = move;
-		playerStrategy.move(sm, wd, move);
+		strategy.move(sm, wd, move);
 	}
 	
 	@Override
@@ -85,8 +86,6 @@ public class PlayerSphere extends Entity {
 		if (B2Util.toPixelScale(cs.m_radius) <= minRadius) {
 			return;
 		}
-		
-		System.out.println(move.getParticles());
 		
 		applyLinearImpulse(impulseX, impulseY);
 		cs.m_radius -= 0.001 * move.getParticles();
@@ -191,7 +190,7 @@ public class PlayerSphere extends Entity {
 		int posY = B2Util.toPixelY(position.y);
 		
 		//draw Circle
-		g.setColor(Color.CYAN);
+		g.setColor(this.color);
 		g.fillOval(posX - radius, posY - radius, radius*2, radius*2);
 		g.setColor(Color.BLACK);
 		g.drawOval(posX - radius, posY - radius, radius*2, radius*2);

@@ -1,5 +1,6 @@
 package ru.fanter.merge;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -24,6 +25,11 @@ import ru.fanter.merge.model.LifeModel;
 import ru.fanter.merge.model.Move;
 import ru.fanter.merge.model.SphereModel;
 import ru.fanter.merge.model.WorldData;
+import ru.fanter.merge.strategy.BottomLeftStrategy;
+import ru.fanter.merge.strategy.BottomRightStrategy;
+import ru.fanter.merge.strategy.Strategy;
+import ru.fanter.merge.strategy.TopLeftStrategy;
+import ru.fanter.merge.strategy.TopRightStrategy;
 
 public class GameWorld implements EntityListener {
 	public static World world;
@@ -39,16 +45,21 @@ public class GameWorld implements EntityListener {
 	}
 	
 	public void createWorld() {
-		entityList.add(new Borders());
+		int width = MergeAI.WINDOW_WIDTH;
+		int height = MergeAI.WINDOW_HEIGHT;
 		
-		for (int i = 1; i < 10; i++) {
-			Random random = new Random();
-			int radius = (random.nextInt(5) + 2)*5 ;
-			PlayerSphere sphere = new PlayerSphere(new PlayerStrategy());
-			sphere.createSphere(70*i, 200);
-			sphere.addEntityListener(this);
-			entityList.add(sphere);
-		}
+		createSphere(new TopLeftStrategy(), Color.BLUE, width/5, height/4);
+		createSphere(new TopRightStrategy(), Color.RED, width - width/5, height/4);
+		createSphere(new BottomLeftStrategy(), Color.GREEN, width/5, height - height/4);
+		createSphere(new BottomRightStrategy(), Color.ORANGE, width - width/5, height - height/4);
+		entityList.add(new Borders());
+	}
+	
+	private void createSphere(Strategy strategy, Color color, int x, int y) {
+		PlayerSphere topLeftSphere = new PlayerSphere(strategy, color);
+		topLeftSphere.createSphere(x, y);
+		topLeftSphere.addEntityListener(this);
+		entityList.add(topLeftSphere);
 	}
 	
 	public void step() {			
