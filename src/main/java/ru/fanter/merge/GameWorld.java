@@ -36,7 +36,7 @@ public class GameWorld implements EntityListener {
 	private float timeStep = 1.0f/35.0f;
 	private int velocityIterations = 8;
 	private int positionIterations = 4;
-	private ArrayList<Entity> entityList = new ArrayList<Entity>();
+	private Set<Entity> entityList = new HashSet<Entity>();
 	private Set<Entity> entitiesToRemove = new HashSet<Entity>();
 	
 	public GameWorld() {
@@ -63,7 +63,14 @@ public class GameWorld implements EntityListener {
 	}
 	
 	public void step() {			
+		updateEntities();
+		generateLifeSphere();
+		world.step(timeStep, velocityIterations, positionIterations);
+	}
+	
+	private void updateEntities() {
 		WorldData worldData = createWorldData();
+		
 		for (Entity entity : entityList) {
 			if (entity.getType() == EntityType.PLAYER_SPHERE) {
 				PlayerSphere playerSphere = (PlayerSphere) entity;
@@ -75,9 +82,6 @@ public class GameWorld implements EntityListener {
 				entity.update();
 			}
 		}
-		
-		generateLifeSphere();
-		world.step(timeStep, velocityIterations, positionIterations);
 	}
 	
 	private WorldData createWorldData() {
@@ -113,8 +117,8 @@ public class GameWorld implements EntityListener {
 		int random = rnd.nextInt(30);
 		
 		if (random == 0) {
-			int x = rnd.nextInt(750) + 20;
-			int y = rnd.nextInt(550) + 20;
+			int x = rnd.nextInt(MergeAI.WINDOW_WIDTH - 50) + 20;
+			int y = rnd.nextInt(MergeAI.WINDOW_HEIGHT - 50) + 20;
 			LifeSphere lifeSphere = new LifeSphere(x, y);
 			lifeSphere.addEntityListener(this);
 			entityList.add(lifeSphere);
@@ -150,8 +154,11 @@ public class GameWorld implements EntityListener {
 	
 	public void keyPressed (KeyEvent ev) {
 		for (Entity entity : entityList) {
-			if (entity.getType() == EntityType.PLAYER_SPHERE) {
-				((PlayerSphere)entity).keyPressed(ev);	
+			if (entity.getType() != EntityType.PLAYER_SPHERE) {
+				continue;
+			}
+			if (((PlayerSphere)entity).getStrategy() instanceof BottomRightStrategy) {
+				((PlayerSphere)entity).keyPressed(ev);
 			}
 		}
 	}

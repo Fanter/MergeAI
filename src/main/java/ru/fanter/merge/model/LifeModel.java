@@ -3,28 +3,29 @@ package ru.fanter.merge.model;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
 
+import ru.fanter.merge.MergeAI;
 import ru.fanter.merge.entities.LifeSphere;
 import ru.fanter.merge.util.B2Util;
 
 public class LifeModel {
-	private double x;
-	private double y;
+	private float x;
+	private float y;
 	private int ticksToLive;
 	
 	public LifeModel(LifeSphere ls) {
 		Body body = ls.getBody();
 		Vec2 point = body.getPosition();
 		
-		x = B2Util.toScaledX(point.x);
-		y = B2Util.toScaledY(point.y);
+		x = B2Util.SCALE * point.x;
+		y = MergeAI.WINDOW_HEIGHT - B2Util.SCALE * point.y;
 		ticksToLive = ls.getTicksLeft();
 	}
 	
-	public double getX() {
+	public float getX() {
 		return x;
 	}
 	
-	public double getY() {
+	public float getY() {
 		return y;
 	}
 	

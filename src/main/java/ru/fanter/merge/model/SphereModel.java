@@ -4,6 +4,7 @@ import org.jbox2d.collision.shapes.CircleShape;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
 
+import ru.fanter.merge.MergeAI;
 import ru.fanter.merge.entities.PlayerSphere;
 import ru.fanter.merge.util.B2Util;
 
@@ -20,11 +21,11 @@ public class SphereModel {
 		Vec2 point = body.getPosition();
 		Vec2 velocity = body.getLinearVelocity();
 		
-		x = B2Util.toScaledX(point.x);
-		y = B2Util.toScaledY(point.y);
-		velocityX = B2Util.toScaledX(velocity.x);
-		velocityY = B2Util.toScaledY(velocity.y);
-		radius = B2Util.toScaled(cs.m_radius);
+		x = B2Util.SCALE * point.x;
+		y = MergeAI.WINDOW_HEIGHT - B2Util.SCALE * point.y;
+		velocityX = B2Util.SCALE * velocity.x;
+		velocityY = MergeAI.WINDOW_HEIGHT - B2Util.SCALE * velocity.y;
+		radius = B2Util.toPixelScale(cs.m_radius);
 	}
 	
 	public float getX() {

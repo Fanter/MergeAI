@@ -9,8 +9,8 @@ public class Move {
 		this.fireAngle = fireAngle;
 		if (numOfParticles < 1) {
 			particles = 1;
-		} else if (numOfParticles > 10) {
-			particles = 10;
+		} else if (numOfParticles > 3) {
+			particles = 3;
 		} else {
 			particles = numOfParticles;
 		}

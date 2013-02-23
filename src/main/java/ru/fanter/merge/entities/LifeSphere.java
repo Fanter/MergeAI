@@ -16,11 +16,12 @@ import ru.fanter.merge.event.EntityListener;
 import ru.fanter.merge.event.EntityEvent.EventType;
 import ru.fanter.merge.util.B2Util;
 
-public class LifeSphere extends Entity {
+public class LifeSphere extends Entity implements Consumable {
 	private EntityType type = EntityType.LIFE_SPHERE;
 	private Body body;
 	private final int radius = 7;
 	private int ticksToLive = 600;
+	private int particles = 100;
 	
 	public LifeSphere(int x, int y) {
 		BodyDef bodyDef = new BodyDef();
@@ -42,6 +43,11 @@ public class LifeSphere extends Entity {
 	public int getTicksLeft() {
 		return ticksToLive;
 	}
+	
+	@Override
+	public int getParticles() {
+		return particles;
+	}
 
 	@Override
 	public EntityType getType() {
@@ -61,8 +67,8 @@ public class LifeSphere extends Entity {
 	@Override
 	public void draw(Graphics g) {
 		Vec2 position = body.getPosition();
-		int posX = B2Util.toPixelX(position.x);
-		int posY = B2Util.toPixelY(position.y);
+		int posX = (int) B2Util.toPixelX(position.x);
+		int posY = (int) B2Util.toPixelY(position.y);
 		
 		g.setColor(Color.BLACK);
 		g.fillOval(posX - radius, posY - radius, radius*2, radius*2);
