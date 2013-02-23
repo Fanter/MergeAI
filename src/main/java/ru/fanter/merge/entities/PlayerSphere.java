@@ -87,8 +87,8 @@ public class PlayerSphere extends Entity implements Consumable {
 		float impulseCoeff = 0.01f;
 		CircleShape cs = (CircleShape) body.getFixtureList().getShape();
 		float impulse = move.getParticles() * impulseCoeff;
-		float impulseX = (float) Math.cos(move.getFireAngle()) * impulse;
-		float impulseY = (float) Math.sin(move.getFireAngle()) * impulse;
+		float impulseX = - (float) Math.cos(move.getFireAngle()) * impulse;
+		float impulseY = - (float) Math.sin(move.getFireAngle()) * impulse;
 		
 		if (particles <= 0) {
 			return;
@@ -150,6 +150,8 @@ public class PlayerSphere extends Entity implements Consumable {
 		int posX = (int) B2Util.toPixelX(position.x);
 		int posY = (int) B2Util.toPixelY(position.y);
 		int radius = (int) this.radius;
+		int impulseX = -(int) (Math.cos(move.getFireAngle()) * radius);
+		int impulseY = -(int) (Math.sin(move.getFireAngle()) * radius);
 		
 		//draw Circle
 		g.setColor(this.color);
@@ -159,6 +161,11 @@ public class PlayerSphere extends Entity implements Consumable {
 		
 		//draw inverse velocity vector
 		g.drawLine(posX, posY, posX - velX, posY + velY);
+		
+		//draw strategy impulse vector
+		g.setColor(Color.RED);
+		g.drawLine(posX, posY, posX - impulseX, posY + impulseY); 
+		impulseOffset++;
 		
 		//draw impulse vector
 		g.setColor(Color.RED);

@@ -8,6 +8,6 @@ public class BottomLeftStrategy implements Strategy {
 
 	@Override
 	public void move(SphereModel sphere, WorldData world, Move move) {
-		move.fireParticles(Math.toRadians(30), 1);
+		move.fireParticles(Math.toRadians(135), 1);
 	}
 }

@@ -5,6 +5,11 @@ public class Move {
 	private int particles;
 	private boolean split = false;
 	
+	/**
+	 * 
+	 * @param fireAngle - angle to fire particles of sphere in radians
+	 * @param numOfParticles - number of particles fires in one tick
+	 */
 	public void fireParticles(double fireAngle, int numOfParticles) {
 		this.fireAngle = fireAngle;
 		if (numOfParticles < 1) {

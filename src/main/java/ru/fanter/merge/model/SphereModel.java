@@ -21,10 +21,10 @@ public class SphereModel {
 		Vec2 point = body.getPosition();
 		Vec2 velocity = body.getLinearVelocity();
 		
-		x = B2Util.SCALE * point.x;
-		y = MergeAI.WINDOW_HEIGHT - B2Util.SCALE * point.y;
-		velocityX = B2Util.SCALE * velocity.x;
-		velocityY = MergeAI.WINDOW_HEIGHT - B2Util.SCALE * velocity.y;
+		x = B2Util.toPixelX(point.x);
+		y = B2Util.toPixelY(point.y);
+		velocityX = B2Util.toPixelScale(velocity.x);
+		velocityY = B2Util.toPixelScale(velocity.y);
 		radius = B2Util.toPixelScale(cs.m_radius);
 	}
 	
