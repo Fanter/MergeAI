@@ -24,7 +24,8 @@ public class SphereModel {
 		x = B2Util.toPixelX(point.x);
 		y = B2Util.toPixelY(point.y);
 		velocityX = B2Util.toPixelScale(velocity.x);
-		velocityY = B2Util.toPixelScale(velocity.y);
+		//minus because box2d y axis  has opposite direction
+		velocityY = -B2Util.toPixelScale(velocity.y);
 		radius = B2Util.toPixelScale(cs.m_radius);
 	}
 	

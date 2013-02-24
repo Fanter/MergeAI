@@ -16,8 +16,8 @@ public class LifeModel {
 		Body body = ls.getBody();
 		Vec2 point = body.getPosition();
 		
-		x = B2Util.SCALE * point.x;
-		y = MergeAI.WINDOW_HEIGHT - B2Util.SCALE * point.y;
+		x = B2Util.toPixelX(point.x);
+		y = B2Util.toPixelY(point.y);
 		ticksToLive = ls.getTicksLeft();
 	}
 	
