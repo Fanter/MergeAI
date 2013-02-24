@@ -3,7 +3,7 @@
 .classpath
 .project
 doc
-src\workspace\bballs\src\main\java\ru\fanter\merge\strategy\*.java
+src/workspace/bballs/src/main/java/ru/fanter/merge/strategy/
 
 #Maven
 target
