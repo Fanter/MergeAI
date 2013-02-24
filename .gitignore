@@ -3,7 +3,6 @@
 .classpath
 .project
 doc
-src/main/java/ru/fanter/merge/strategy/
 
 #Maven
 target
