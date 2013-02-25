@@ -22,17 +22,15 @@ import ru.fanter.merge.strategy.Strategy;
 import ru.fanter.merge.util.B2Util;
 
 public class PlayerSphere extends Entity implements Consumable {
-	private final float density = 8.5f;
-	private final float friction = 0.0f;
-	private final float restitution = 1.0f;
-	private int impulseOffset = 0;
+	private final int particlesToSplit = 600;
+	private int particles = particlesToSplit - 200;
+	private int impulseOffset;
 	private float radius;
 	private Body body;
 	private EntityType type = EntityType.PLAYER_SPHERE;
 	private Strategy strategy;
 	private Move move;
 	private Color color;
-	private int particles = 600;
 	private float fireAngle;
 	
 	//pixels per second
@@ -55,6 +53,10 @@ public class PlayerSphere extends Entity implements Consumable {
 	}
 	
 	public void createSphere (int x, int y) {
+		float density = 8.5f;
+		float friction = 0.0f;
+		float restitution = 1.0f;
+		
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.position.set(B2Util.toMeterX(x), B2Util.toMeterY(y));
 		bodyDef.type = BodyType.DYNAMIC;
@@ -85,7 +87,6 @@ public class PlayerSphere extends Entity implements Consumable {
 		strategy.move(sm, wd, move);
 		
 		fireAngle = this.move.getFireAngle();
-		particlesToFire = this.move.getParticles();
 	}
 	
 	@Override
@@ -247,6 +248,10 @@ public class PlayerSphere extends Entity implements Consumable {
 	@Override
 	public int getParticles() {
 		return particles;
+	}
+	
+	public int getNumOfParticlesToSplit() {
+		return particlesToSplit;
 	}
 	
 	@Override
