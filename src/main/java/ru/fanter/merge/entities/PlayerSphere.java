@@ -12,7 +12,9 @@ import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.FixtureDef;
 
 import ru.fanter.merge.GameWorld;
+import ru.fanter.merge.event.EntityEvent;
 import ru.fanter.merge.event.EntityListener;
+import ru.fanter.merge.event.EntityEvent.EventType;
 import ru.fanter.merge.model.Move;
 import ru.fanter.merge.model.SphereModel;
 import ru.fanter.merge.model.WorldData;
@@ -31,6 +33,8 @@ public class PlayerSphere extends Entity implements Consumable {
 	private Move move;
 	private Color color;
 	private int particles = 300;
+	private float fireAngle;
+	private int particlesToFire;
 	
 	//pixels per second
 	private float maxVelocity = 60.0f;
@@ -80,6 +84,9 @@ public class PlayerSphere extends Entity implements Consumable {
 	public void move(SphereModel sm, WorldData wd, Move move) {
 		this.move = move;
 		strategy.move(sm, wd, move);
+		
+		fireAngle = this.move.getFireAngle();
+		particlesToFire = this.move.getParticles();
 	}
 	
 	@Override
@@ -91,6 +98,11 @@ public class PlayerSphere extends Entity implements Consumable {
 		float impulseY = - (float) Math.sin(move.getFireAngle()) * impulse;
 		
 		if (particles <= 0) {
+			return;
+		}
+		
+		if (move.shouldSplit()) {
+			split();
 			return;
 		}
 		
@@ -128,9 +140,32 @@ public class PlayerSphere extends Entity implements Consumable {
 		body.resetMassData();
 	}
 	
-	public void consume(Entity anotherEntity) {
-		Consumable another = (Consumable) anotherEntity;
+	private void split() {
+		createDividedSphere();
+		createDividedSphere();
+		remove();
+	}
+	
+	private void createDividedSphere() {
+		PlayerSphere sphere = new PlayerSphere(strategy, color);
+		sphere.createSphere(getX(), getY());
+		sphere.addEntityListener(entityListener);
+		sphere.particles = this.particles / 2;
+		Vec2 velocity = body.getLinearVelocity();
+		sphere.body.setLinearVelocity(velocity);
 		
+		EntityEvent ee = new EntityEvent(sphere, EventType.SPLIT);
+		entityListener.update(ee);
+	}
+	
+	public boolean isTeammate(PlayerSphere another) {
+		if (this.color == another.color) {
+			return true;
+		}
+		return false;
+	}
+	
+	public void consume(Consumable another) {
 		particles += another.getParticles();
 		radius = calculateRadius();
 		body.resetMassData();
@@ -150,8 +185,8 @@ public class PlayerSphere extends Entity implements Consumable {
 		int posX = (int) B2Util.toPixelX(position.x);
 		int posY = (int) B2Util.toPixelY(position.y);
 		int radius = (int) this.radius;
-		int impulseX = -(int) (Math.cos(move.getFireAngle()) * radius);
-		int impulseY = -(int) (Math.sin(move.getFireAngle()) * radius);
+		int impulseX = -(int) (Math.cos((double) fireAngle) * radius);
+		int impulseY = -(int) (Math.sin((double) fireAngle) * radius);
 		
 		//draw Circle
 		g.setColor(this.color);

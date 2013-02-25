@@ -8,6 +8,7 @@ import org.jbox2d.collision.Manifold;
 import org.jbox2d.collision.shapes.CircleShape;
 import org.jbox2d.dynamics.contacts.Contact;
 
+import ru.fanter.merge.entities.Consumable;
 import ru.fanter.merge.entities.Entity;
 import ru.fanter.merge.entities.EntityType;
 import ru.fanter.merge.entities.PlayerSphere;
@@ -37,11 +38,17 @@ public class CollisionHandler implements ContactListener {
 			
 			//it works because radius of life sphere is always smaller
 			//than player radius. Can broke easily.
+			if (entityA.getType() == EntityType.PLAYER_SPHERE && entityB.getType() == EntityType.PLAYER_SPHERE) {
+				if (((PlayerSphere)entityA).isTeammate((PlayerSphere) entityB)) {
+					continue;
+				}
+			}
+			
 			if (csA.m_radius > csB.m_radius) {
-				((PlayerSphere)entityA).consume(entityB);
+				((PlayerSphere)entityA).consume((Consumable) entityB);
 				entityB.remove();
 			} else if (csA.m_radius < csB.m_radius) {
-				((PlayerSphere)entityB).consume(entityA);
+				((PlayerSphere)entityB).consume((Consumable) entityA);
 				entityA.remove();
 			} 
 		}

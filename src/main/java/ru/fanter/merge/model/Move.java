@@ -1,7 +1,7 @@
 package ru.fanter.merge.model;
 
 public class Move {
-	private double fireAngle;
+	private float fireAngle;
 	private int particles;
 	private boolean split = false;
 	
@@ -10,7 +10,7 @@ public class Move {
 	 * @param fireAngle - angle to fire particles of sphere in radians
 	 * @param numOfParticles - number of particles fires in one tick
 	 */
-	public void fireParticles(double fireAngle, int numOfParticles) {
+	public void fireParticles(float fireAngle, int numOfParticles) {
 		this.fireAngle = fireAngle;
 		if (numOfParticles < 1) {
 			particles = 1;
@@ -25,7 +25,11 @@ public class Move {
 		this.split = split;
 	}
 	
-	public double getFireAngle() {
+	public boolean shouldSplit() {
+		return split;
+	}
+	
+	public float getFireAngle() {
 		return fireAngle;
 	}
 	

@@ -23,7 +23,6 @@ public class MergeAI extends JFrame implements KeyListener {
 	public static final int WINDOW_WIDTH = 900;
 	public static final int WINDOW_HEIGHT = 600;
 	public static GameWorld gameWorld;
-	private CollisionHandler collisionHandler;
 	private GamePanel gamePanel;
 	private int step;
 	
@@ -36,8 +35,6 @@ public class MergeAI extends JFrame implements KeyListener {
 	private void createWorldObjects() {
 		gameWorld = new GameWorld();
 		gameWorld.createWorld();
-		collisionHandler = new CollisionHandler();
-		gameWorld.addCollisionListener(collisionHandler);
 	}
 	
 	private void createGui() {
@@ -77,8 +74,6 @@ public class MergeAI extends JFrame implements KeyListener {
             startTime = System.currentTimeMillis();
             //TODO move collision handler into gameWorld
             gameWorld.step();
-            collisionHandler.handleCollisions();
-            gameWorld.removeDeadEntities();
             repaint();
             elapsedTime = System.currentTimeMillis() - startTime;
             timeToSleep = UPDATE_PERIOD - elapsedTime;
