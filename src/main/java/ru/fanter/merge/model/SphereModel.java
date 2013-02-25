@@ -14,6 +14,8 @@ public class SphereModel {
 	private float radius;
 	private float velocityX;
 	private float velocityY;
+	private int maxParticles;
+	private int particles;
 	
 	public SphereModel(PlayerSphere ps) {
 		Body body = ps.getBody();
@@ -27,6 +29,14 @@ public class SphereModel {
 		//minus because box2d y axis  has opposite direction
 		velocityY = -B2Util.toPixelScale(velocity.y);
 		radius = B2Util.toPixelScale(cs.m_radius);
+	}
+	
+	public int getParticles() {
+		return particles;
+	}
+	
+	public int getMaxParticles() {
+		
 	}
 	
 	public float getX() {

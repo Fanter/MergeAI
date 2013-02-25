@@ -32,9 +32,8 @@ public class PlayerSphere extends Entity implements Consumable {
 	private Strategy strategy;
 	private Move move;
 	private Color color;
-	private int particles = 300;
+	private int particles = 600;
 	private float fireAngle;
-	private int particlesToFire;
 	
 	//pixels per second
 	private float maxVelocity = 60.0f;
@@ -52,7 +51,7 @@ public class PlayerSphere extends Entity implements Consumable {
 	}
 	
 	private float calculateRadius() {
-		return 10 + (float) Math.sqrt((double) particles);
+		return 10 + (float) Math.sqrt((double) particles) * 0.5f;
 	}
 	
 	public void createSphere (int x, int y) {
